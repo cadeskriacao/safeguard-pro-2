@@ -48,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="w-10 h-10 bg-gradient-emerald-dark rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 dark:shadow-none">
             <IconShield className="w-6 h-6" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">SafeGuardado</h1>
+          <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Sistema SST</h1>
         </div>
 
         <nav className="flex-1 space-y-8 overflow-y-auto pr-2">
