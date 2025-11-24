@@ -15,18 +15,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const getLinkClass = (path: string, isMobile: boolean = true) => {
     const isActive = location.pathname === path || (path !== '/' && location.pathname.startsWith(path));
-    
+
     if (isMobile) {
       // Mobile styles
-      return `flex flex-col items-center justify-center w-full h-full space-y-1 ${
-        isActive ? 'text-emerald-800 dark:text-emerald-400 font-bold' : 'text-gray-400 dark:text-slate-500'
-      }`;
+      return `flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive ? 'text-emerald-800 dark:text-emerald-400 font-bold' : 'text-gray-400 dark:text-slate-500'
+        }`;
     } else {
       // Desktop Sidebar styles
       const baseClass = "flex items-center space-x-4 w-full px-6 py-4 rounded-xl transition-all duration-200";
       // FIX: Added dark:bg-none to remove light gradient in dark mode
-      const activeClass = isActive 
-        ? 'bg-gradient-emerald-soft dark:bg-none dark:bg-slate-800 border-r-4 border-emerald-500 text-emerald-900 dark:text-emerald-400 font-bold shadow-sm' 
+      const activeClass = isActive
+        ? 'bg-gradient-emerald-soft dark:bg-none dark:bg-slate-800 border-r-4 border-emerald-500 text-emerald-900 dark:text-emerald-400 font-bold shadow-sm'
         : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white font-medium';
       return `${baseClass} ${activeClass}`;
     }
@@ -42,18 +41,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex min-h-screen bg-[#F3F4F6] dark:bg-slate-950 transition-colors duration-300">
-      
+
       {/* --- DESKTOP SIDEBAR (Visible on md+) --- */}
       <aside className="hidden md:flex flex-col w-72 bg-white dark:bg-slate-900 fixed h-full z-30 shadow-sm dark:shadow-slate-900/50 rounded-r-[2rem] py-8 pl-4 pr-4 transition-colors duration-300">
         <div className="px-6 mb-12 flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-emerald-dark rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 dark:shadow-none">
             <IconShield className="w-6 h-6" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">SafeGuard</h1>
+          <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">SafeGuardado</h1>
         </div>
 
         <nav className="flex-1 space-y-8 overflow-y-auto pr-2">
-          
+
           <div>
             <p className="px-6 text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-4">Menu</p>
             <div className="space-y-1">
@@ -73,17 +72,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
 
           <div>
-             <p className="px-6 text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-4">General</p>
-             <div className="space-y-1">
-                <Link to={APP_ROUTES.APR_LIST} className={getLinkClass(APP_ROUTES.APR_LIST, false)}>
-                  <IconClipboard className="w-5 h-5" />
-                  <span>Minhas APRs</span>
-                </Link>
-                <Link to={APP_ROUTES.PROFILE} className={getLinkClass(APP_ROUTES.PROFILE, false)}>
-                  <IconUser className="w-5 h-5" />
-                  <span>Perfil</span>
-                </Link>
-             </div>
+            <p className="px-6 text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-4">General</p>
+            <div className="space-y-1">
+              <Link to={APP_ROUTES.APR_LIST} className={getLinkClass(APP_ROUTES.APR_LIST, false)}>
+                <IconClipboard className="w-5 h-5" />
+                <span>Minhas APRs</span>
+              </Link>
+              <Link to={APP_ROUTES.PROFILE} className={getLinkClass(APP_ROUTES.PROFILE, false)}>
+                <IconUser className="w-5 h-5" />
+                <span>Perfil</span>
+              </Link>
+            </div>
           </div>
 
         </nav>
@@ -110,7 +109,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <h1 className="text-lg font-bold tracking-tight">SafeGuard</h1>
         </div>
         <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
-            CS
+          CS
         </div>
       </header>
 
@@ -118,7 +117,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
         <div className="flex-1 overflow-y-auto pt-20 pb-24 md:pt-8 md:pb-8">
           <div className="max-w-[1600px] mx-auto w-full px-4 md:px-8 text-gray-900 dark:text-gray-100">
-             {children}
+            {children}
           </div>
         </div>
       </main>
@@ -128,11 +127,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Link to={APP_ROUTES.HOME} className={getLinkClass(APP_ROUTES.HOME)}>
           <IconHome className="w-6 h-6" />
         </Link>
-        
+
         <Link to={APP_ROUTES.PROJECTS} className={getLinkClass(APP_ROUTES.PROJECTS)}>
           <IconBuilding className="w-6 h-6" />
         </Link>
-        
+
         <Link to={APP_ROUTES.INSPECTION_LIST} className="flex flex-col items-center justify-center -mt-8">
           <div className={`bg-gradient-emerald-dark rounded-full p-4 shadow-xl text-white hover:scale-105 transition-transform border-[6px] border-[#F3F4F6] dark:border-slate-950`}>
             <IconPlusCircle className="w-7 h-7" />
