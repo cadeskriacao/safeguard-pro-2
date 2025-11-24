@@ -62,6 +62,26 @@ Após o deploy:
 
 ## 🔍 Troubleshooting
 
+### ⚠️ Tela Branca / Root Div Vazio?
+
+**CAUSA MAIS PROVÁVEL**: Variáveis de ambiente não configuradas no Vercel
+
+**Como corrigir:**
+1. Vá em: **Vercel Dashboard** → Seu Projeto → **Settings** → **Environment Variables**
+2. Adicione estas variáveis:
+   ```
+   VITE_SUPABASE_URL=sua_url_do_supabase
+   VITE_SUPABASE_ANON_KEY=sua_chave_anon_do_supabase
+   ```
+3. ✅ Marque: **Production**, **Preview**, **Development**
+4. Clique em **Save**
+5. Force um novo deploy: **Deployments** → botão com 3 pontos → **Redeploy**
+
+**Verificar se funcionou:**
+- Abra o Console do navegador (F12)
+- Se ainda houver erros, eles aparecerão lá
+- Ou veja a mensagem amigável do Error Boundary
+
 ### Tela Branca?
 - ✅ Verifique se as variáveis de ambiente estão configuradas no Vercel
 - ✅ Abra o Console (F12) e veja os erros
