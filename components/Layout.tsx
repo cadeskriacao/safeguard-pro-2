@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconHome, IconClipboard, IconPlusCircle, IconShield, IconBuilding, IconUser } from './Icons';
 import { APP_ROUTES } from '../constants';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,9 +10,16 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   // Hide layout elements on auth pages
   const isAuthPage = [APP_ROUTES.LOGIN, APP_ROUTES.REGISTER, APP_ROUTES.FORGOT_PASSWORD].includes(location.pathname);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate(APP_ROUTES.LOGIN);
+  };
 
   const getLinkClass = (path: string, isMobile: boolean = true) => {
     const isActive = location.pathname === path || (path !== '/' && location.pathname.startsWith(path));
@@ -89,14 +97,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* User Profile Snippet */}
         {/* FIX: Added dark:bg-none to remove light gradient in dark mode */}
-        <div className="mt-8 mx-2 p-4 bg-gradient-emerald-soft dark:bg-none dark:bg-slate-800 rounded-2xl flex items-center gap-3 border border-emerald-50 dark:border-slate-700">
-          <div className="w-10 h-10 rounded-full bg-emerald-200 dark:bg-emerald-900 flex items-center justify-center text-emerald-800 dark:text-emerald-300 font-bold shadow-inner">
-            CS
+        <div className="mt-8 mx-2 p-4 bg-gradient-emerald-soft dark:bg-none dark:bg-slate-800 rounded-2xl flex flex-col gap-3 border border-emerald-50 dark:border-slate-700">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-emerald-200 dark:bg-emerald-900 flex items-center justify-center text-emerald-800 dark:text-emerald-300 font-bold shadow-inner">
+              {user?.email?.substring(0, 2).toUpperCase() || 'US'}
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Usuário</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{user?.email}</p>
+            </div>
           </div>
-          <div className="overflow-hidden">
-            <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Carlos Silva</p>
-            <p className="text-xs text-gray-500 dark:text-slate-400 truncate">tst@safeguard.com</p>
-          </div>
+          <button
+            onClick={handleSignOut}
+            className="w-full py-2 px-4 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+          >
+            Sair
+          </button>
         </div>
       </aside>
 
@@ -108,8 +124,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <h1 className="text-lg font-bold tracking-tight">SafeGuard</h1>
         </div>
-        <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
-          CS
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
+            {user?.email?.substring(0, 2).toUpperCase() || 'US'}
+          </div>
+          <button onClick={handleSignOut} className="text-xs text-red-500 font-bold">Sair</button>
         </div>
       </header>
 

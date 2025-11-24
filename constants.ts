@@ -11,6 +11,7 @@ export const APP_ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   PROJECTS: '/projects',
   PROJECT_NEW: '/projects/new',
   PROJECT_EDIT: '/projects/edit/:id',
@@ -64,11 +65,11 @@ export const MOCK_INSPECTION_TEMPLATE: InspectionItem[] = [
 ];
 
 export const MOCK_APRS: APR[] = [
-  { 
-    id: '1', 
-    taskName: 'Soldagem em Tubulação', 
-    status: APRStatus.APPROVED, 
-    date: '10/10/2023', 
+  {
+    id: '1',
+    taskName: 'Soldagem em Tubulação',
+    status: APRStatus.APPROVED,
+    date: '10/10/2023',
     location: 'Oficina Central',
     description: 'Soldagem TIG em tubulação de aço carbono de 4 polegadas. Necessário isolamento térmico da área.',
     projectId: '1',
@@ -83,11 +84,11 @@ export const MOCK_APRS: APR[] = [
     ],
     approverSignature: { role: 'TST', name: 'Carlos Silva', date: '10/10/2023 08:30', signed: true }
   },
-  { 
-    id: '2', 
-    taskName: 'Trabalho em Altura - Andaime', 
-    status: APRStatus.PENDING_APPROVAL, 
-    date: '12/10/2023', 
+  {
+    id: '2',
+    taskName: 'Trabalho em Altura - Andaime',
+    status: APRStatus.PENDING_APPROVAL,
+    date: '12/10/2023',
     location: 'Fachada Norte',
     description: 'Montagem de andaime fachadeiro para pintura externa no 3º pavimento.',
     projectId: '1',
@@ -100,27 +101,27 @@ export const MOCK_APRS: APR[] = [
     ],
     approverSignature: { role: 'TST', name: 'Carlos Silva', date: '', signed: false }
   },
-  { 
-    id: '3', 
-    taskName: 'Espaço Confinado - Tanque 3', 
-    status: APRStatus.DRAFT, 
-    date: '13/10/2023', 
+  {
+    id: '3',
+    taskName: 'Espaço Confinado - Tanque 3',
+    status: APRStatus.DRAFT,
+    date: '13/10/2023',
     location: 'Área de Tanques',
     description: 'Limpeza interna do tanque de armazenamento de água pluvial.',
     projectId: '2',
     risks: [],
     teamSignatures: []
   },
-  { 
-    id: '4', 
-    taskName: 'Manutenção Elétrica QGBT', 
-    status: APRStatus.REJECTED, 
-    date: '09/10/2023', 
+  {
+    id: '4',
+    taskName: 'Manutenção Elétrica QGBT',
+    status: APRStatus.REJECTED,
+    date: '09/10/2023',
     location: 'Subestação',
     description: 'Reaperto de conexões no quadro geral de baixa tensão.',
     projectId: '1',
     risks: [
-       { risk: 'Choque Elétrico', control: 'Desenergização e Bloqueio (LOTO)', ppe: ['Luva isolante classe 0', 'Manga isolante', 'Capacete classe B'] }
+      { risk: 'Choque Elétrico', control: 'Desenergização e Bloqueio (LOTO)', ppe: ['Luva isolante classe 0', 'Manga isolante', 'Capacete classe B'] }
     ],
     teamSignatures: [
       { role: 'Eletricista', name: 'Roberto Almeida', date: '09/10/2023 09:00', signed: true }
