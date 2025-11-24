@@ -1,5 +1,16 @@
 # 🚀 Guia de Deploy no Vercel
 
+## ⚠️ PROBLEMA RESOLVIDO
+
+**Tela em branco estava causada por:**
+- ❌ Import map no `index.html` carregando React de CDNs externos
+- ✅ **CORRIGIDO**: Import map removido - agora o Vite bundla tudo corretamente
+
+**Build de produção agora gera:**
+- ✅ `react-vendor.js` (46.30 KB) - React e React Router
+- ✅ `supabase.js` (176.71 KB) - Supabase client
+- ✅ `index.js` (859.06 KB) - Código da aplicação
+
 ## ✅ Arquivos Configurados
 
 Os seguintes arquivos foram criados/atualizados para garantir o funcionamento correto no Vercel:
