@@ -38,7 +38,7 @@ export interface Inspection {
   items: InspectionItem[];
   inspectorName: string;
   hasImminentRisk: boolean;
-  projectId?: string;
+  projectId: string;
   signatureUrl?: string; // Captura da assinatura manual
 }
 

@@ -10,6 +10,10 @@ export const createInspection = async (inspection: Inspection): Promise<{ succes
             return { success: false, error: 'Usuário não autenticado' };
         }
 
+        if (!inspection.projectId) {
+            return { success: false, error: 'ID do projeto é obrigatório' };
+        }
+
         // Remove id to let Supabase generate it, or keep it if you want client-side ID generation (not recommended for PKs usually, but matching types)
         // We'll let Supabase generate the ID if we omit it, but our type requires it. 
         // Let's send everything except ID if we want auto-gen, or send ID if we generated it.
@@ -86,5 +90,31 @@ export const getInspectionById = async (id: string): Promise<Inspection | null> 
     } catch (error) {
         console.error('Error fetching inspection:', error);
         return null;
+    }
+};
+
+export const getInspectionsByProjectId = async (projectId: string): Promise<Inspection[]> => {
+    try {
+        const { data, error } = await supabase
+            .from('inspections')
+            .select('*')
+            .eq('project_id', projectId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        return data.map((item: any) => ({
+            id: item.id,
+            location: item.location,
+            date: item.date,
+            inspectorName: item.inspector_name,
+            hasImminentRisk: item.has_imminent_risk,
+            projectId: item.project_id,
+            signatureUrl: item.signature_url,
+            items: item.items
+        }));
+    } catch (error) {
+        console.error('Error fetching project inspections:', error);
+        return [];
     }
 };
