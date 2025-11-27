@@ -48,7 +48,7 @@ const getBaseLayout = (title: string, content: string) => {
       </head>
       <body>
         <div class="header">
-          <div class="brand">SafeGuard <span>Pro</span></div>
+          <div class="brand">Sistema <span>SST</span></div>
           <div class="doc-title">
             <h1>${title}</h1>
             <p>Documento Gerado Eletronicamente</p>
@@ -56,7 +56,7 @@ const getBaseLayout = (title: string, content: string) => {
         </div>
         ${content}
         <div class="footer">
-          SafeGuard Pro • Sistema de Gestão SST • Gerado em ${new Date().toLocaleString('pt-BR')}
+          Sistema SST • Sistema de Gestão SST • Gerado em ${new Date().toLocaleString('pt-BR')}
         </div>
         <script>
           window.onload = () => { setTimeout(() => window.print(), 800); }
@@ -136,7 +136,7 @@ export const printAPR = (apr: APR) => {
 
 export const printInspection = (inspection: Inspection) => {
   const statusLabel = inspection.hasImminentRisk ? 'RISCO CRÍTICO' : 'CONFORME';
-  
+
   const rows = inspection.items.map((item, i) => {
     let statusBadge = '';
     if (item.status === 'C') statusBadge = '<span class="status-badge status-c">CONFORME</span>';
@@ -163,7 +163,7 @@ export const printInspection = (inspection: Inspection) => {
     </tr>
   `}).join('');
 
-  const inspectorSignatureHtml = inspection.signatureUrl 
+  const inspectorSignatureHtml = inspection.signatureUrl
     ? `<img src="${inspection.signatureUrl}" class="sig-img" />`
     : `<br/><br/>`;
 

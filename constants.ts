@@ -7,7 +7,8 @@ export const CURRENT_USER: User = {
 
 // Moved Mock Projects to storageService initialization, keeping here only for type reference or fallback if needed
 export const APP_ROUTES = {
-  HOME: '/',
+  HOME: '/dashboard',
+  LANDING: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',

@@ -15,6 +15,8 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import LandingPage from './pages/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { APP_ROUTES } from './constants';
@@ -26,9 +28,11 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             {/* Public Routes */}
+            <Route path={APP_ROUTES.LANDING} element={<LandingPage />} />
             <Route path={APP_ROUTES.LOGIN} element={<Login />} />
             <Route path={APP_ROUTES.REGISTER} element={<Register />} />
             <Route path={APP_ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+            <Route path={APP_ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
 
             {/* Protected Routes */}
             <Route path={APP_ROUTES.HOME} element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

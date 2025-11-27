@@ -14,7 +14,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
 
   // Hide layout elements on auth pages
-  const isAuthPage = [APP_ROUTES.LOGIN, APP_ROUTES.REGISTER, APP_ROUTES.FORGOT_PASSWORD].includes(location.pathname);
+  // Hide layout elements on auth pages and landing page
+  const isAuthPage = [APP_ROUTES.LOGIN, APP_ROUTES.REGISTER, APP_ROUTES.FORGOT_PASSWORD, APP_ROUTES.RESET_PASSWORD, APP_ROUTES.LANDING].includes(location.pathname);
 
   const handleSignOut = async () => {
     await signOut();
@@ -38,6 +39,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       return `${baseClass} ${activeClass}`;
     }
   };
+
+  if (location.pathname === APP_ROUTES.LANDING) {
+    return <>{children}</>;
+  }
 
   if (isAuthPage) {
     return (
@@ -122,7 +127,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="w-8 h-8 bg-gradient-emerald-dark rounded-lg flex items-center justify-center text-white">
             <IconShield className="w-5 h-5" />
           </div>
-          <h1 className="text-lg font-bold tracking-tight">SafeGuard</h1>
+          <h1 className="text-lg font-bold tracking-tight">Sistema SST</h1>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
