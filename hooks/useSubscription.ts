@@ -52,22 +52,17 @@ export const useSubscription = () => {
                 }),
             });
 
-            const { sessionId } = await response.json();
-            if (!sessionId) throw new Error('Session ID not returned');
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server error: ${response.status} ${errorText}`);
+            }
 
-            // Redirect to Stripe Checkout using the session ID
-            // Since we are using a backend session creation, we typically redirect to the URL provided by Stripe
-            // But here we got a sessionId. We need Stripe.js on the frontend to redirect with sessionId
-            // OR we can just return the URL from the backend.
-            // Let's check create-checkout-session.ts. It returns sessionId.
-            // We need to use stripe.redirectToCheckout({ sessionId }) from @stripe/stripe-js
-            // OR change the backend to return the url.
-            // Changing backend to return url is easier for now to avoid installing @stripe/stripe-js if not needed.
-            // But standard way is stripe.redirectToCheckout.
-            // Let's assume we can use the URL approach if we update the backend.
-            // Actually, let's update the backend to return `url` as well, or just use the sessionId with a simple redirect if possible?
-            // No, sessionId requires Stripe.js.
-            // Let's update backend to return `url` (session.url).
+            const { url } = await response.json();
+            if (url) {
+                window.location.href = url;
+            } else {
+                throw new Error('Checkout URL not returned');
+            }
 
         } catch (err) {
             console.error('Error redirecting to checkout:', err);

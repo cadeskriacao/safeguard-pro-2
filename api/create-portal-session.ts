@@ -1,4 +1,4 @@
-import { stripe } from '../services/stripe';
+import { stripe } from '../services/stripe.js';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {

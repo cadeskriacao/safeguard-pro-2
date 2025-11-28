@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(cors());
 
@@ -35,9 +35,9 @@ app.use((req, res, next) => {
 // This prevents 'STRIPE_SECRET_KEY is missing' error during static import
 const startServer = async () => {
     try {
-        const { default: createCheckoutSession } = await import('./api/create-checkout-session');
-        const { default: createPortalSession } = await import('./api/create-portal-session');
-        const { default: stripeWebhook } = await import('./api/webhooks/stripe');
+        const { default: createCheckoutSession } = await import('./api/create-checkout-session.js');
+        const { default: createPortalSession } = await import('./api/create-portal-session.js');
+        const { default: stripeWebhook } = await import('./api/webhooks/stripe.js');
 
         // Routes
         app.post('/api/create-checkout-session', adaptHandler(createCheckoutSession));

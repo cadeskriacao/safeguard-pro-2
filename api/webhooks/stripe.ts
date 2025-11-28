@@ -1,4 +1,4 @@
-import { stripe } from '../../services/stripe';
+import { stripe } from '../../services/stripe.js';
 import { createClient } from '@supabase/supabase-js';
 import { buffer } from 'micro';
 
@@ -9,10 +9,16 @@ export const config = {
     },
 };
 
-const supabase = createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy initialization to prevent server crash on startup if keys are missing
+const getSupabaseAdmin = () => {
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        throw new Error('SUPABASE_SERVICE_ROLE_KEY is missing');
+    }
+    return createClient(
+        process.env.VITE_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
+};
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
@@ -43,6 +49,8 @@ export default async function handler(req, res) {
                     // Retrieve subscription to get status and price
                     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
+                    const supabase = getSupabaseAdmin();
+
                     await supabase
                         .from('profiles')
                         .update({
@@ -55,6 +63,7 @@ export default async function handler(req, res) {
                 }
                 case 'customer.subscription.updated': {
                     const subscription = event.data.object as any;
+                    const supabase = getSupabaseAdmin();
                     // Find user by stripe_customer_id
                     const { data: profiles } = await supabase
                         .from('profiles')
@@ -75,6 +84,7 @@ export default async function handler(req, res) {
                 }
                 case 'customer.subscription.deleted': {
                     const subscription = event.data.object as any;
+                    const supabase = getSupabaseAdmin();
                     const { data: profiles } = await supabase
                         .from('profiles')
                         .select('id')
