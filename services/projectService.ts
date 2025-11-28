@@ -9,6 +9,27 @@ export const createProject = async (project: Omit<Project, 'id'>): Promise<{ suc
             return { success: false, error: 'Usuário não autenticado' };
         }
 
+        // Check subscription limit
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_status')
+            .eq('id', user.id)
+            .single();
+
+        const { count, error: countError } = await supabase
+            .from('projects')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+
+        if (countError) throw countError;
+
+        const isPremium = profile?.subscription_status === 'active' || profile?.subscription_status === 'trialing';
+        const projectCount = count || 0;
+
+        if (projectCount >= 1 && !isPremium) {
+            return { success: false, error: 'PLAN_LIMIT_REACHED' };
+        }
+
         const { error } = await supabase
             .from('projects')
             .insert({

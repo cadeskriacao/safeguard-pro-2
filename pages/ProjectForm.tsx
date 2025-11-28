@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { APP_ROUTES } from '../constants';
-import { getProjectById, createProject, updateProject } from '../services/projectService';
+import { getProjectById, createProject, updateProject, getProjects } from '../services/projectService';
 import { Project } from '../types';
-import { IconArrowLeft, IconBuilding } from '../components/Icons';
+import { IconArrowLeft, IconBuilding, IconLock } from '../components/Icons';
+import { useSubscription } from '../hooks/useSubscription';
 
 const ProjectForm: React.FC = () => {
   const { id } = useParams();
@@ -11,6 +12,9 @@ const ProjectForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [cep, setCep] = useState('');
   const [loadingCep, setLoadingCep] = useState(false);
+  const { subscriptionStatus, redirectToCheckout } = useSubscription();
+  const [projectCount, setProjectCount] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
 
   const [formData, setFormData] = useState<Project>({
     id: '',
@@ -56,10 +60,22 @@ const ProjectForm: React.FC = () => {
           alert("Obra não encontrada!");
           navigate(APP_ROUTES.PROJECTS);
         }
+      } else {
+        // Check limit only on creation
+        const projects = await getProjects();
+        setProjectCount(projects.length);
       }
     };
     fetchProject();
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (!id && subscriptionStatus && subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing' && projectCount >= 1) {
+      setLimitReached(true);
+    } else {
+      setLimitReached(false);
+    }
+  }, [id, subscriptionStatus, projectCount]);
 
   const handleChange = (field: keyof Project, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -105,7 +121,28 @@ const ProjectForm: React.FC = () => {
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-800 space-y-6 transition-colors">
+      {limitReached && (
+        <div className="mb-8 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-6 rounded-2xl flex items-start gap-4">
+          <div className="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-xl text-amber-600 dark:text-amber-400">
+            <IconLock className="w-6 h-6" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-amber-800 dark:text-amber-200 mb-1">Limite do Plano Gratuito Atingido</h3>
+            <p className="text-sm text-amber-700 dark:text-amber-300 mb-4">
+              Você já atingiu o limite de 1 obra do plano gratuito. Faça um upgrade para cadastrar obras ilimitadas.
+            </p>
+            <button
+              onClick={redirectToCheckout}
+              type="button"
+              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-colors text-sm"
+            >
+              Fazer Upgrade Agora ($10/mês)
+            </button>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className={`bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-800 space-y-6 transition-colors ${limitReached ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
 
         <div>
           <label className="block text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2">Nome da Obra</label>

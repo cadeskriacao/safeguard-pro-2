@@ -72,3 +72,11 @@ export interface User {
   name: string;
   role: 'TST' | 'Engenheiro' | 'Gestor' | 'Colaborador';
 }
+
+export interface Profile {
+  id: string;
+  email: string | null;
+  subscription_status: 'active' | 'trialing' | 'past_due' | 'canceled' | 'incomplete' | 'free';
+  stripe_customer_id: string | null;
+  price_id: string | null;
+}
