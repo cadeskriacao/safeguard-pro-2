@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { APP_ROUTES } from '../constants';
 import { getProjectById, createProject, updateProject, getProjects } from '../services/projectService';
 import { Project } from '../types';
-import { IconArrowLeft, IconBuilding, IconLock } from '../components/Icons';
+import { IconArrowLeft, IconBuilding, IconLock, IconBadgeCheck } from '../components/Icons';
 import { useSubscription } from '../hooks/useSubscription';
 
 const ProjectForm: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [updatedStatus, setUpdatedStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cep, setCep] = useState('');
   const [loadingCep, setLoadingCep] = useState(false);
@@ -121,7 +123,23 @@ const ProjectForm: React.FC = () => {
         </h1>
       </div>
 
-      {limitReached && (
+      {/* Success Banner */}
+      {searchParams.get('subscription_success') && (
+        <div className="mb-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-6 rounded-2xl flex items-start gap-4 animate-fade-in">
+          <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl text-emerald-600 dark:text-emerald-400">
+            <IconBadgeCheck className="w-6 h-6" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-emerald-800 dark:text-emerald-200 mb-1">Assinatura realizada com sucesso!</h3>
+            <p className="text-sm text-emerald-700 dark:text-emerald-300">
+              Sua conta foi atualizada para PRO. Agora você pode criar obras ilimitadas.
+            </p>
+          </div>
+          <button onClick={() => setSearchParams({})} className="text-emerald-500 hover:text-emerald-700">✕</button>
+        </div>
+      )}
+
+      {limitReached && !updatedStatus && !searchParams.get('subscription_success') && (
         <div className="mb-8 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-6 rounded-2xl flex items-start gap-4">
           <div className="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-xl text-amber-600 dark:text-amber-400">
             <IconLock className="w-6 h-6" />

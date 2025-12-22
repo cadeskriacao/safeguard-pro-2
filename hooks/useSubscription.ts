@@ -7,6 +7,24 @@ export const useSubscription = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const syncSubscription = async (userId: string, email: string) => {
+        try {
+            console.log('Syncing subscription status...');
+            const response = await fetch('/api/sync-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, email }),
+            });
+            const result = await response.json();
+            if (response.ok && result.success && result.data) {
+                console.log('Sync successful:', result.data);
+                setSubscriptionStatus(result.data.subscription_status);
+            }
+        } catch (err) {
+            console.error('Failed to sync subscription:', err);
+        }
+    };
+
     useEffect(() => {
         let mounted = true;
 
@@ -18,17 +36,23 @@ export const useSubscription = () => {
                     return;
                 }
 
-                // Initial fetch
+                // Initial fetch from DB
                 const { data, error } = await supabase
                     .from('profiles')
-                    .select('subscription_status')
+                    .select('subscription_status, email')
                     .eq('id', user.id)
                     .single();
 
                 if (error) throw error;
 
                 if (mounted) {
+                    console.log('DEBUG: Fetched subscription status:', data?.subscription_status);
                     setSubscriptionStatus(data?.subscription_status || 'free');
+                }
+
+                // Sync with Stripe in background
+                if (user.email) {
+                    syncSubscription(user.id, user.email);
                 }
 
                 // Subscribe to realtime changes
@@ -67,13 +91,6 @@ export const useSubscription = () => {
 
         return () => {
             mounted = false;
-            // Best effort cleanup not easily possible with async useEffect pattern without refactoring, 
-            // but the mounted check handles the React state update safety.
-            // Ideally we'd await the cleanupPromise to get the unsubscribe function, 
-            // but for simplicity in this hook structure, we rely on the channel replacement or app unmount. 
-            // To be strictly correct, we should hoist the subscribe out. 
-            // However, Supabase client handles duplicate channels reasonably well or we can rely on unique channel names per component instance if critical.
-            // For now, let's keep it simple as channel cleaning is async.
         };
     }, []);
 
@@ -111,9 +128,6 @@ export const useSubscription = () => {
         }
     };
 
-    // Wait, I need to fix the backend to return URL or install stripe-js.
-    // I'll update the backend to return `url` which is `session.url`.
-
     const redirectToPortal = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
@@ -126,7 +140,23 @@ export const useSubscription = () => {
                 .single();
 
             if (!profile?.stripe_customer_id) {
-                alert('No billing account found');
+                const { data: { user: currentUser } } = await supabase.auth.getUser();
+                if (currentUser?.email) {
+                    // Try to sync one last time before giving up
+                    await syncSubscription(currentUser.id, currentUser.email);
+                    // If still failing, then alert
+                }
+            }
+
+            // Retry fetch
+            const { data: profileRetry } = await supabase
+                .from('profiles')
+                .select('stripe_customer_id')
+                .eq('id', user.id)
+                .single();
+
+            if (!profileRetry?.stripe_customer_id) {
+                alert('No billing account found. Please subscribe first.');
                 return;
             }
 
@@ -136,7 +166,7 @@ export const useSubscription = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    customerId: profile.stripe_customer_id,
+                    customerId: profileRetry.stripe_customer_id,
                 }),
             });
 
@@ -154,7 +184,8 @@ export const useSubscription = () => {
         subscriptionStatus,
         loading,
         error,
-        redirectToCheckout, // This needs to be implemented correctly
+        redirectToCheckout,
         redirectToPortal,
+        checkSubscription: syncSubscription
     };
 };

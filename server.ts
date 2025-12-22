@@ -38,14 +38,17 @@ const startServer = async () => {
         const { default: createCheckoutSession } = await import('./api/create-checkout-session.js');
         const { default: createPortalSession } = await import('./api/create-portal-session.js');
         const { default: stripeWebhook } = await import('./api/webhooks/stripe.js');
+        const { default: syncSubscription } = await import('./api/sync-subscription.js');
 
         // Routes
         app.post('/api/create-checkout-session', adaptHandler(createCheckoutSession));
         app.post('/api/create-portal-session', adaptHandler(createPortalSession));
         app.post('/api/webhooks/stripe', adaptHandler(stripeWebhook));
+        app.post('/api/sync-subscription', adaptHandler(syncSubscription));
 
         app.listen(port, () => {
             console.log(`> Local API server running at http://localhost:${port}`);
+            console.log('> Environment variables loaded. Server Ready.');
         });
     } catch (error) {
         console.error('Failed to start server:', error);

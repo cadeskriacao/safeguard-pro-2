@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { APP_ROUTES } from '../constants';
 import {
     Shield,
     CheckCircle2,
     BarChart3,
     Users,
+    User,
     ArrowRight,
     Zap,
     FileText,
@@ -20,6 +22,7 @@ import {
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -79,18 +82,30 @@ const LandingPage: React.FC = () => {
 
                         {/* Auth Buttons */}
                         <div className="hidden md:flex items-center gap-4 z-20">
-                            <button
-                                onClick={() => navigate(APP_ROUTES.LOGIN)}
-                                className="px-6 py-2.5 text-sm font-bold text-slate-700 hover:text-emerald-600 transition-colors"
-                            >
-                                Entrar
-                            </button>
-                            <button
-                                onClick={() => navigate(APP_ROUTES.REGISTER)}
-                                className="px-6 py-2.5 text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-full transition-all shadow-lg shadow-slate-900/20 hover:shadow-slate-900/40 hover:-translate-y-0.5 active:scale-95"
-                            >
-                                Criar Conta
-                            </button>
+                            {user ? (
+                                <button
+                                    onClick={() => navigate(APP_ROUTES.HOME)}
+                                    className="px-6 py-2.5 text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-white rounded-full transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:scale-95 flex items-center gap-2"
+                                >
+                                    <User className="w-4 h-4" />
+                                    Acessar Painel
+                                </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => navigate(APP_ROUTES.LOGIN)}
+                                        className="px-6 py-2.5 text-sm font-bold text-slate-700 hover:text-emerald-600 transition-colors"
+                                    >
+                                        Entrar
+                                    </button>
+                                    <button
+                                        onClick={() => navigate(APP_ROUTES.REGISTER)}
+                                        className="px-6 py-2.5 text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-full transition-all shadow-lg shadow-slate-900/20 hover:shadow-slate-900/40 hover:-translate-y-0.5 active:scale-95"
+                                    >
+                                        Criar Conta
+                                    </button>
+                                </>
+                            )}
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -112,8 +127,17 @@ const LandingPage: React.FC = () => {
                         <a href="#benefits" className="text-xl font-bold text-slate-800" onClick={(e) => scrollToSection(e, 'benefits')}>Benefícios</a>
                         <a href="#cta" className="text-xl font-bold text-slate-800" onClick={(e) => scrollToSection(e, 'cta')}>Começar</a>
                         <hr className="border-slate-100 my-2" />
-                        <button onClick={() => navigate(APP_ROUTES.LOGIN)} className="text-slate-600 font-bold text-lg text-left">Entrar</button>
-                        <button onClick={() => navigate(APP_ROUTES.REGISTER)} className="bg-slate-900 text-white font-bold p-4 rounded-xl text-center shadow-xl">Criar Conta Grátis</button>
+                        {user ? (
+                            <button onClick={() => navigate(APP_ROUTES.HOME)} className="bg-emerald-500 text-white font-bold p-4 rounded-xl text-center shadow-xl flex items-center justify-center gap-2">
+                                <User className="w-5 h-5" />
+                                Acessar Painel
+                            </button>
+                        ) : (
+                            <>
+                                <button onClick={() => navigate(APP_ROUTES.LOGIN)} className="text-slate-600 font-bold text-lg text-left">Entrar</button>
+                                <button onClick={() => navigate(APP_ROUTES.REGISTER)} className="bg-slate-900 text-white font-bold p-4 rounded-xl text-center shadow-xl">Criar Conta Grátis</button>
+                            </>
+                        )}
                     </div>
                 )}
             </nav>
@@ -163,10 +187,10 @@ const LandingPage: React.FC = () => {
 
                                 <div className="flex flex-col sm:flex-row gap-4 animate-reveal-up" style={{ animationDelay: '0.4s' }}>
                                     <button
-                                        onClick={() => navigate(APP_ROUTES.REGISTER)}
+                                        onClick={() => navigate(user ? APP_ROUTES.HOME : APP_ROUTES.REGISTER)}
                                         className="px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold text-lg transition-all shadow-2xl shadow-slate-900/30 hover:shadow-slate-900/50 hover:-translate-y-1 flex items-center justify-center gap-3 group"
                                     >
-                                        Começar Agora
+                                        {user ? 'Acessar Meu Painel' : 'Começar Agora'}
                                         <div className="bg-white/20 p-1 rounded-full group-hover:translate-x-1 transition-transform">
                                             <ArrowRight className="w-4 h-4" />
                                         </div>
