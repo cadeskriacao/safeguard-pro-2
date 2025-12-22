@@ -88,12 +88,18 @@ const ProjectForm: React.FC = () => {
   }, [id, navigate]);
 
   useEffect(() => {
+    // If returning from success, don't enforce limit immediately
+    if (searchParams.get('subscription_success')) {
+      setLimitReached(false);
+      return;
+    }
+
     if (!id && subscriptionStatus && subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing' && projectCount >= 1) {
       setLimitReached(true);
     } else {
       setLimitReached(false);
     }
-  }, [id, subscriptionStatus, projectCount]);
+  }, [id, subscriptionStatus, projectCount, searchParams]);
 
   const handleChange = (field: keyof Project, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));

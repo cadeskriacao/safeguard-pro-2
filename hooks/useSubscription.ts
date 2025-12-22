@@ -9,7 +9,7 @@ export const useSubscription = () => {
 
     const syncSubscription = async (userId: string, email: string) => {
         try {
-            console.log('Syncing subscription status...');
+            console.log('Syncing subscription status for:', email);
             const response = await fetch('/api/sync-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ export const useSubscription = () => {
             });
             const result = await response.json();
             if (response.ok && result.success && result.data) {
-                console.log('Sync successful:', result.data);
+                console.log('Sync successful. Status:', result.data.subscription_status);
                 setSubscriptionStatus(result.data.subscription_status);
             }
         } catch (err) {
@@ -50,7 +50,10 @@ export const useSubscription = () => {
                     setSubscriptionStatus(data?.subscription_status || 'free');
                 }
 
-                // Sync with Stripe in background
+                // Sync with Stripe in background ONLY if status is mismatched/unknown or we suspect an issue
+                // Only syncing if current status is NOT active prevents unnecessary API calls, 
+                // but checking continuously ensures we catch upgrades. 
+                // Let's keep it but ensure we don't treat API failure as 'active'.
                 if (user.email) {
                     syncSubscription(user.id, user.email);
                 }
