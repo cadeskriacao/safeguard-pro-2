@@ -14,8 +14,24 @@ const ProjectForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [cep, setCep] = useState('');
   const [loadingCep, setLoadingCep] = useState(false);
-  const { subscriptionStatus, redirectToCheckout } = useSubscription();
+  const { subscriptionStatus, redirectToCheckout, checkSubscription } = useSubscription(); // Add checkSubscription
   const [projectCount, setProjectCount] = useState(0);
+
+  // Sync subscription status immediately if returning from successful checkout
+  useEffect(() => {
+    if (searchParams.get('subscription_success') === 'true' && checkSubscription) {
+      // Get user info and sync
+      import('../services/supabaseClient').then(async ({ supabase }) => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && user.email) {
+          await checkSubscription(user.id, user.email);
+          // Optionally remove the query param after sync to clean URL, 
+          // but keeping it for the banner logic might be desired. 
+          // The banner has an 'X' button to dismiss.
+        }
+      });
+    }
+  }, [searchParams, checkSubscription]);
   const [limitReached, setLimitReached] = useState(false);
 
   const [formData, setFormData] = useState<Project>({
