@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconHome, IconClipboard, IconPlusCircle, IconShield, IconBuilding, IconUser } from './Icons';
 import { APP_ROUTES } from '../constants';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { subscriptionStatus } = useSubscription();
 
   // Hide layout elements on auth pages
   // Hide layout elements on auth pages and landing page
@@ -108,7 +110,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {user?.email?.substring(0, 2).toUpperCase() || 'US'}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Usuário</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Usuário</p>
+                {(subscriptionStatus === 'active' || subscriptionStatus === 'trialing') && (
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-emerald-dark text-white shadow-sm">
+                    PRO
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{user?.email}</p>
             </div>
           </div>
@@ -130,8 +139,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <h1 className="text-lg font-bold tracking-tight">Sistema SST</h1>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
-            {user?.email?.substring(0, 2).toUpperCase() || 'US'}
+          <div className="relative">
+            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
+              {user?.email?.substring(0, 2).toUpperCase() || 'US'}
+            </div>
+            {(subscriptionStatus === 'active' || subscriptionStatus === 'trialing') && (
+              <span className="absolute -bottom-1 -right-1 flex items-center justify-center w-4 h-4 bg-gradient-emerald-dark text-white text-[8px] font-bold rounded-full border-2 border-white dark:border-slate-900 shadow-sm">
+                P
+              </span>
+            )}
           </div>
           <button onClick={handleSignOut} className="text-xs text-red-500 font-bold">Sair</button>
         </div>

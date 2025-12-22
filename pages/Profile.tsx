@@ -190,11 +190,16 @@ const Profile: React.FC = () => {
                         <IconCreditCard className="w-6 h-6" />
                      </div>
                      <div>
-                        <p className="font-bold text-gray-800 dark:text-gray-200">Assinatura</p>
+                        <div className="flex items-center gap-2">
+                           <p className="font-bold text-gray-800 dark:text-gray-200">Assinatura</p>
+                           {(subscriptionStatus === 'active' || subscriptionStatus === 'trialing') && (
+                              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gradient-emerald-dark text-white shadow-sm uppercase">PRO</span>
+                           )}
+                        </div>
                         <p className="text-xs text-gray-500 dark:text-slate-500">
                            {subscriptionStatus === 'active' || subscriptionStatus === 'trialing'
-                              ? 'Plano Premium (Ilimitado)'
-                              : 'Plano Gratuito (1 Obra)'}
+                              ? 'Gerenciar seu plano atual (Downgrade/Cancelamento)'
+                              : 'Plano Gratuito (1 Obra). Faça upgrade para ilimitado.'}
                         </p>
                      </div>
                   </div>
@@ -205,7 +210,7 @@ const Profile: React.FC = () => {
                         : 'bg-gradient-emerald-dark text-white hover:shadow-lg'
                         }`}
                   >
-                     {subscriptionStatus === 'active' || subscriptionStatus === 'trialing' ? 'Gerenciar' : 'Fazer Upgrade'}
+                     {subscriptionStatus === 'active' || subscriptionStatus === 'trialing' ? 'Gerenciar Assinatura' : 'Seja PRO'}
                   </button>
                </div>
 
