@@ -52,6 +52,9 @@ const startServer = async () => {
         app.get('/api/get-clients-count', adaptHandler(getClientsCount));
         app.get('/api/get-whitelabel-stats', adaptHandler(getWhitelabelStats));
 
+        const syncCoordinatesHandler = (await import('./api/sync-project-coordinates')).default;
+        app.use('/api/sync-project-coordinates', (req, res) => syncCoordinatesHandler(req, res));
+
         app.listen(port, () => {
             console.log(`> Local API server running at http://localhost:${port}`);
             console.log('> Environment variables loaded. Server Ready.');

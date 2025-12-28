@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 import { APP_ROUTES } from '../constants';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Users, DollarSign, LogOut, Loader2, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Users, Construction, FileText, ClipboardList, Map as MapIcon, LogOut, DollarSign, Loader2, TrendingUp } from 'lucide-react';
+import ProjectMap from '../components/ProjectMap';
 
 interface MrrData {
     mrr: number;
@@ -157,14 +158,14 @@ const WhitelabelDashboard: React.FC = () => {
                                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                                    <YAxis axisLine={false} tickLine={false} tickFormatter={(val) => `R$ ${val}`} />
+                                    <YAxis axisLine={false} tickLine={false} tickFormatter={(val) => `R$ ${val} `} />
                                     <Tooltip
                                         formatter={(val: number) => formatCurrency(val)}
                                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     />
                                     <Bar dataKey="amount" fill="#3B82F6" radius={[4, 4, 0, 0]}>
                                         {chartData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3B82F6' : '#60A5FA'} />
+                                            <Cell key={`cell - ${index} `} fill={index % 2 === 0 ? '#3B82F6' : '#60A5FA'} />
                                         ))}
                                     </Bar>
                                 </BarChart>
@@ -197,19 +198,12 @@ const WhitelabelDashboard: React.FC = () => {
                 {/* Map Section */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-6">Mapa de Obras (Por Estado)</h3>
-                    <div className="h-64 w-full bg-blue-50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-100">
-                        <div className="text-center">
-                            <TrendingUp className="w-10 h-10 text-blue-300 mx-auto mb-2" />
-                            <p className="text-gray-400 font-medium">Mapa Interativo dos Estados</p>
-                            <p className="text-xs text-gray-400 mt-1">({stats?.locations?.length || 0} locais registrados)</p>
-                            <div className="mt-4 text-xs text-left max-h-32 overflow-y-auto px-4">
-                                {stats?.locations?.map((loc: any) => (
-                                    <div key={loc.id} className="truncate text-gray-500 py-1 border-b border-gray-100 last:border-0">
-                                        📍 {loc.address || 'Sem endereço'}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                    <div className="flex items-center gap-2 mb-4">
+                        <MapIcon className="w-5 h-5 text-gray-400" />
+                        <h3 className="text-gray-500 font-medium">Localização das Obras</h3>
+                    </div>
+                    <div className="h-[400px] w-full">
+                        <ProjectMap locations={stats?.locations || []} />
                     </div>
                 </div>
 

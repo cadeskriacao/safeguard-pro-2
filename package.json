@@ -16,9 +16,11 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "lucide-react": "^0.555.0",
+    "mapbox-gl": "^3.17.0",
     "micro": "^10.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-map-gl": "^8.1.0",
     "react-router-dom": "^7.9.6",
     "recharts": "^3.5.0",
     "stripe": "^20.0.0"
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "ts-node": "^10.9.2",

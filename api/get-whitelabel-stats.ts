@@ -48,7 +48,7 @@ export default async function handler(req, res) {
         // Assuming location data is in 'address' or 'location' field.
         const { data: locations, error: errorLocations } = await supabase
             .from('projects')
-            .select('id, name, address, status')
+            .select('id, name, address, status, lat, lng')
             .limit(100);
 
         if (errorProjects || errorLocations) {
