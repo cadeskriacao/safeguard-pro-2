@@ -5,6 +5,12 @@
             "destination": "/index.html"
         }
     ],
+    "crons": [
+        {
+            "path": "/api/sync-project-coordinates",
+            "schedule": "0 0 * * *"
+        }
+    ],
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "installCommand": "npm install",
