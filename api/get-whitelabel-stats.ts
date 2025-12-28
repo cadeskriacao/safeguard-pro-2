@@ -56,15 +56,8 @@ export default async function handler(req, res) {
             // Don't fail completely if just one stats fails? Or return what we have?
         }
 
-        // Mocking some state extraction from address for now if simple
         // Real implementation would geocode or parse "SP", "RJ" etc from address string.
-        const projectStates: Record<string, number> = {};
-
-        locations?.forEach((p: any) => {
-            // Simple heuristic: extract last 2-char logic if formatted like "City - UF"
-            // Or just return the raw list and let frontend handle?
-            // Let's just return the raw projects for the map component to handle or display.
-        });
+        // For now we just return the raw projects for the map component to handle or display.
 
         res.status(200).json({
             totalProjects: projectCount || 0,

@@ -26,30 +26,18 @@ const INITIAL_VIEW_STATE = {
 };
 
 // Some mock locations if none provided (for demo purposes) or fallback
-const MOCK_LOCATIONS: ProjectLocation[] = [
-    { id: '1', name: 'Obra São Paulo', lat: -23.5505, lng: -46.6333 },
-    { id: '2', name: 'Obra Rio de Janeiro', lat: -22.9068, lng: -43.1729 },
-    { id: '3', name: 'Obra Belo Horizonte', lat: -19.9167, lng: -43.9345 },
-    { id: '4', name: 'Obra Brasília', lat: -15.7801, lng: -47.9292 },
-    { id: '5', name: 'Obra Salvador', lat: -12.9777, lng: -38.5016 },
-];
+
 
 export default function ProjectMap({ locations = [] }: ProjectMapProps) {
-    // Combine real locations (if we had coords) with mock ones for now to ensure visibility
-    // If the parent passes locations with valid lat/lng, we use them.
-    // Since we know the DB currently only has address strings, we will likely be using
-    // the mock locations inside this component or passed from parent until we geocode.
-    // For this implementation, I'll prefer the prop, but default to MOCK if empty so the user sees *something*.
-    const displayLocations = locations.length > 0
-        ? locations.filter(l => l.lat && l.lng)
-        : MOCK_LOCATIONS;
+    // Filter only locations with valid coordinates
+    const displayLocations = locations.filter(l => l.lat && l.lng);
 
     return (
         <div className="w-full h-full rounded-lg overflow-hidden border border-gray-200 shadow-sm relative">
             <Map
                 initialViewState={INITIAL_VIEW_STATE}
                 style={{ width: '100%', height: 400 }}
-                mapStyle="mapbox://styles/mapbox/streets-v11"
+                mapStyle="mapbox://styles/mapbox/streets-v12"
                 mapboxAccessToken={MAPBOX_TOKEN}
                 mapLib={mapboxgl}
             >
