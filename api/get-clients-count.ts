@@ -1,5 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
+import { stripe } from '../services/stripe';
 
 const getSupabaseAdmin = () => {
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -26,17 +27,55 @@ export default async function handler(req, res) {
     try {
         const supabase = getSupabaseAdmin();
 
-        // Count profiles using HEAD to be faster and cheaper
-        const { count, error } = await supabase
+        // 1. Get Total Profiles from Supabase
+        const { count: totalUsers, error } = await supabase
             .from('profiles')
             .select('*', { count: 'exact', head: true });
 
         if (error) {
             console.error('Supabase count error:', error);
-            return res.status(500).json({ error: error.message });
+            throw error;
         }
 
-        res.status(200).json({ count: count || 0 });
+        // 2. Get Paying Users (Active Subscriptions) from Stripe
+        // Iterate to get accurate count of unique paying customers
+        let payingCustomers = new Set();
+        let hasMore = true;
+        let startingAfter = undefined;
+
+        while (hasMore) {
+            const result = await stripe.subscriptions.list({
+                status: 'active',
+                limit: 100,
+                starting_after: startingAfter
+            });
+
+            for (const sub of result.data) {
+                // If the subscription is active, this customer is paying
+                if (typeof sub.customer === 'string') {
+                    payingCustomers.add(sub.customer);
+                } else if (sub.customer && sub.customer.id) {
+                    payingCustomers.add(sub.customer.id);
+                }
+            }
+
+            if (result.has_more) {
+                startingAfter = result.data[result.data.length - 1].id;
+            } else {
+                hasMore = false;
+            }
+        }
+
+        const payingCount = payingCustomers.size;
+
+        // 3. Calculate Non-Paying
+        const nonPayingCount = Math.max(0, (totalUsers || 0) - payingCount);
+
+        res.status(200).json({
+            count: totalUsers || 0,
+            paying: payingCount,
+            nonPaying: nonPayingCount
+        });
 
     } catch (err: any) {
         console.error('Clients count error:', err);

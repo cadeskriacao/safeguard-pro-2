@@ -17,7 +17,7 @@ interface MrrData {
 const WhitelabelDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [clientCount, setClientCount] = useState<number>(0);
+    const [clientStats, setClientStats] = useState({ total: 0, paying: 0, nonPaying: 0 });
     const [mrrData, setMrrData] = useState<MrrData | null>(null);
     const [stats, setStats] = useState<any>(null);
 
@@ -44,7 +44,11 @@ const WhitelabelDashboard: React.FC = () => {
             const resCount = await fetch('/api/get-clients-count');
             if (resCount.ok) {
                 const dataCount = await resCount.json();
-                setClientCount(dataCount.count || 0);
+                setClientStats({
+                    total: dataCount.count || 0,
+                    paying: dataCount.paying || 0,
+                    nonPaying: dataCount.nonPaying || 0
+                });
             } else {
                 console.error('Error fetching count');
             }
@@ -131,7 +135,15 @@ const WhitelabelDashboard: React.FC = () => {
                         </div>
                         <div>
                             <p className="text-sm font-medium text-gray-500 mb-1">Clientes Cadastrados</p>
-                            <h3 className="text-3xl font-bold text-gray-900">{clientCount}</h3>
+                            <h3 className="text-3xl font-bold text-gray-900">{clientStats.total}</h3>
+                            <div className="flex gap-4 mt-2 text-sm">
+                                <span className="text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full">
+                                    {clientStats.paying} Pagantes
+                                </span>
+                                <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                    {clientStats.nonPaying} Gratuitos
+                                </span>
+                            </div>
                         </div>
                     </div>
 
