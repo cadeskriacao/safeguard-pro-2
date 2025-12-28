@@ -17,6 +17,8 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import LandingPage from './pages/LandingPage';
+import WhitelabelLogin from './pages/WhitelabelLogin';
+import WhitelabelDashboard from './pages/WhitelabelDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { APP_ROUTES } from './constants';
@@ -33,6 +35,10 @@ const App: React.FC = () => {
             <Route path={APP_ROUTES.REGISTER} element={<Register />} />
             <Route path={APP_ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={APP_ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+
+            {/* Whitelabel Routes */}
+            <Route path={APP_ROUTES.WL_LOGIN} element={<WhitelabelLogin />} />
+            <Route path={APP_ROUTES.WL_DASHBOARD} element={<WhitelabelDashboard />} />
 
             {/* Protected Routes */}
             <Route path={APP_ROUTES.HOME} element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

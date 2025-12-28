@@ -23,7 +23,9 @@ export const APP_ROUTES = {
   APR_LIST: '/apr/list',
   APR_DETAILS: '/apr/:id',
   APR_NEW: '/apr/new',
-  PROFILE: '/profile'
+  PROFILE: '/profile',
+  WL_LOGIN: '/wl-sst',
+  WL_DASHBOARD: '/wl-sst/dashboard'
 };
 
 // Initial data for storage service initialization

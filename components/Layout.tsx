@@ -42,7 +42,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   };
 
-  if (location.pathname === APP_ROUTES.LANDING) {
+  if (location.pathname === APP_ROUTES.LANDING || location.pathname.startsWith('/wl-sst')) {
     return <>{children}</>;
   }
 

@@ -39,12 +39,18 @@ const startServer = async () => {
         const { default: createPortalSession } = await import('./api/create-portal-session.js');
         const { default: stripeWebhook } = await import('./api/webhooks/stripe.js');
         const { default: syncSubscription } = await import('./api/sync-subscription.js');
+        const { default: getMrr } = await import('./api/get-mrr.js');
+        const { default: getClientsCount } = await import('./api/get-clients-count.js');
+        const { default: getWhitelabelStats } = await import('./api/get-whitelabel-stats.js');
 
         // Routes
         app.post('/api/create-checkout-session', adaptHandler(createCheckoutSession));
         app.post('/api/create-portal-session', adaptHandler(createPortalSession));
         app.post('/api/webhooks/stripe', adaptHandler(stripeWebhook));
         app.post('/api/sync-subscription', adaptHandler(syncSubscription));
+        app.get('/api/get-mrr', adaptHandler(getMrr));
+        app.get('/api/get-clients-count', adaptHandler(getClientsCount));
+        app.get('/api/get-whitelabel-stats', adaptHandler(getWhitelabelStats));
 
         app.listen(port, () => {
             console.log(`> Local API server running at http://localhost:${port}`);
