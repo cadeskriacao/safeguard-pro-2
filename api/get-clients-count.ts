@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { stripe } from '../services/stripe';
+import { stripe } from '../services/stripe.js';
 
 const getSupabaseAdmin = () => {
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
