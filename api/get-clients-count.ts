@@ -25,6 +25,11 @@ export default async function handler(req, res) {
     }
 
     try {
+        console.log("Checking environment variables...");
+        if (!process.env.SUPABASE_SERVICE_ROLE_KEY) console.error("Missing SUPABASE_SERVICE_ROLE_KEY");
+        if (!process.env.VITE_SUPABASE_URL) console.error("Missing VITE_SUPABASE_URL");
+        if (!process.env.STRIPE_SECRET_KEY) console.error("Missing STRIPE_SECRET_KEY");
+
         const supabase = getSupabaseAdmin();
 
         // 1. Get Total Profiles from Supabase

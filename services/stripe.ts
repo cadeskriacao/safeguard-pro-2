@@ -13,7 +13,7 @@ const getStripe = () => {
         console.log('Initializing Stripe instance...');
 
         // Check for key
-        if (!process.env.STRIPE_SECRET_KEY) {
+        if (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production') {
             // Try to load env again if missing?
             dotenv.config({ path: '.env.local' });
         }
